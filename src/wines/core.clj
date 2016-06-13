@@ -14,9 +14,18 @@
   [& args]
   (println "Hello, World!"))
 
+
 (defn handle-program-error [msg]
   (println msg)
   (System/exit 0))
+
+
+(defn parse-json [json-string error-msg]
+  (try
+    (json/read-str json-string
+                   :key-fn keyword)
+    (catch java.lang.Exception e
+      (handle-program-error error-msg))))
 
 
 ; parse cli options
@@ -24,14 +33,12 @@
 ; read json config file
 
 (def conf
-  (try
-    (json/read-str
-      (slurp (with-abs-path "resources/conf.json"))
-      :key-fn keyword)
-  (catch java.lang.Exception e
-      (handle-program-error "Invalid json"))
-  (catch java.io.FileNotFoundException e
-    (handle-program-error "File does not exist."))))
+  (parse-json
+   (try
+     (slurp (with-abs-path "resources/conf.json"))
+     (catch java.io.FileNotFoundException e
+       (handle-program-error "File does not exist.")))
+   "Invalid json in conf.json"))
 
 
 ; make http api call
@@ -39,6 +46,9 @@
 (def api-resource "catalog")
 
 (def query-params "")
+
+(defn is-200? [status]
+  (= status 200))
 
 (defn api-call []
   (http/get (str protocol "://" api-path api-resource "?apikey=" (:api_key conf)) ;options
@@ -48,8 +58,10 @@
                 (do
                   (println "Async HTTP GET: " status)
                   (println "headers: " headers)
-                  (println "body" body)
-                  )))))
+                  (handle-api-response status headers body))))))
 
-; parse http response
 
+(defn handle-api-response [status headers body]
+  (if (is-200? status)
+    (let [json-res (parse-json body "Api response was not valid json.")]
+      (println (:Status json-res)))))
