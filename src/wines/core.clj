@@ -2,11 +2,10 @@
   (:require
     [clojure.tools.cli :refer [parse-opts]]
     [clojure.tools.logging :as log]
-    [clojure.data.json :as json]
     [org.httpkit.client :as http]
 
     [wines.constants :refer [api-path protocol]]
-    [wines.util :refer [with-abs-path]])
+    [wines.util :refer [with-abs-path handle-program-error parse-json]])
   (:gen-class))
 
 (defn -main
@@ -15,23 +14,28 @@
   (println "Hello, World!"))
 
 
-(defn handle-program-error [msg]
-  (println msg)
-  (System/exit 0))
+;;;;;;;;;;;;;;;;;;;; CLI CODE
 
 
-(defn parse-json [json-string error-msg]
-  (try
-    (json/read-str json-string
-                   :key-fn keyword)
-    (catch java.lang.Exception e
-      (handle-program-error error-msg))))
+(def cli-mode? true)
 
+(def cli-options
+  [["-s" "--search QUERY" "query string from cli"]
+   ["-h" "--help" "Prints help."]])
 
 ; parse cli options
 
-; read json config file
 
+
+;; TODO
+
+
+
+
+
+
+
+; read json config file
 (def conf
   (parse-json
    (try
@@ -50,7 +54,12 @@
 (defn is-200? [status]
   (= status 200))
 
-(defn api-call []
+(defn handle-api-response [status headers body]
+  (when (is-200? status)
+    (let [json-res (parse-json body "Api response was not valid json.")]
+      (:Status json-res))))
+
+(defn api-call [api-resource]
   (http/get (str protocol "://" api-path api-resource "?apikey=" (:api_key conf)) ;options
             (fn [{:keys [status headers body error]}] ;; asynchronous response handling
               (if error
@@ -60,8 +69,3 @@
                   (println "headers: " headers)
                   (handle-api-response status headers body))))))
 
-
-(defn handle-api-response [status headers body]
-  (if (is-200? status)
-    (let [json-res (parse-json body "Api response was not valid json.")]
-      (println (:Status json-res)))))
