@@ -3,18 +3,13 @@
    [wines.util :refer [with-abs-path handle-program-error parse-json]]
   ))
 
-
-
 (def api-path "services.wine.com/api/beta2/service.svc/json/")
 
-
 (def protocol "http")
-
 
 (def cli-options
   [["-s" "--search QUERY" "Query string from cli"]
    ["-h" "--help" "Prints help. GUI will start if no cli args passed."]])
-
 
 ; read json config file
 (def conf

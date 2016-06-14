@@ -5,10 +5,8 @@
    [wines.constants :refer [conf protocol api-path]]
    ))
 
-
 (defn is-200? [status]
   (= status 200))
-
 
 (defn handle-products-listing [products]
   (let [product-list (:List products) total (:Total products)]
@@ -24,7 +22,6 @@
       ))
   )
 
-
 (defn handle-api-response [status headers body]
   (when (is-200? status)
     (let [json-res (parse-json body "Api response was not valid json.")
@@ -35,7 +32,6 @@
             (handle-products-listing products)
             (handle-program-error "Expected products on json payload, but got nil.")))
         (handle-program-error (str (:Messages status)))))))
-
 
 (defn api-call [api-resource query-params]
   (http/get

@@ -7,8 +7,6 @@
    [wines.constants :refer [cli-options]])
   (:gen-class))
 
-
-
 (defn -main
   "Decide what to do... make api call or show ui."
   [& args]

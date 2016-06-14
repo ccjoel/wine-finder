@@ -1,6 +1,6 @@
 (ns wines.cli
   (:require
-   [wines.ui :refer [call-ui]]
+   [wines.gui :refer [call-ui]]
    [wines.util :refer [handle-program-error]]
    [wines.http :refer [api-call]]
    ))
@@ -14,13 +14,10 @@
 
 ;; ----------- END TODO
 
-
-
 (defn print-cli-headers [help]
   (println "Welcome Wine Lovers.")
   (when help
     (println "Options available:")))
-
 
 (defn parse-cli-args [cli-args]
   (if (:errors cli-args)
