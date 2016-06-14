@@ -1,5 +1,6 @@
 (ns wines.util
   (:require
+   [clojure.string :as s]
    [clojure.data.json :as json]))
 
 
@@ -12,6 +13,7 @@
 
 
 (defn handle-program-error [msg]
+  (println "Error in program:")
   (println msg)
   (exit-now!))
 
@@ -24,3 +26,7 @@
       (handle-program-error error-msg))))
 
 
+(defn format-query-params [query-params]
+  (s/join
+   (for [param query-params]
+     (str "&" (s/join "=" [(name (key param)) (val param)])))))
