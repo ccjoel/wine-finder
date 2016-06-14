@@ -10,6 +10,8 @@
 ; hardcoding resource to catalog for now
 (def api-resource "catalog")
 
+; need to set as default api param if search is on (basically if not using gui...)
+
 ;; ----------- END TODO
 
 

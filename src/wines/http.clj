@@ -3,8 +3,7 @@
    [org.httpkit.client :as http]
    [wines.util :refer [parse-json format-query-params handle-program-error]]
    [wines.constants :refer [conf protocol api-path]]
-   )
-  (:use [clojure.pprint :as pprint]))
+   ))
 
 
 (defn is-200? [status]
@@ -16,23 +15,14 @@
     (if (= total 0)
       (handle-program-error "No products found with your criteria.")
       (if (not (nil? product-list))
-;;         (do
-        (let [res []]
-;;             (prn product-list)
-            (for [product product-list]
-              (do
-                (println (select-keys product [:Id :Url]))
-                (conj res (select-keys product [:Id :Url]))
-                )
-              )
-;;             res
-            )
-;;           (pprint (select-keys product-list [:Id :Url]))
-;;           (:Id (first product-list))
-;;           )
-
-        (handle-program-error "Expected Products to contain a List of products.")
-        ))))
+        (for [product product-list]
+          (when (not (nil? product))
+            ; todo: printlns from the promise not shown when running standalone
+            (select-keys product [:Id :Name :Url :PriceRetail :Description])
+            ))
+        (handle-program-error "Expected Products to contain a List of products."))
+      ))
+  )
 
 
 (defn handle-api-response [status headers body]
@@ -56,6 +46,7 @@
      (if error
        (println "Failed, exception is " error)
        (do
+         ; todo: printlns from the promise not shown when running standalone (futures? )
          (println "Async HTTP GET: " status)
          (println "headers: " headers)
          (handle-api-response status headers body))))))

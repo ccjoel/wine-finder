@@ -12,6 +12,7 @@
    (System/exit 0))
 
 
+; TODO: receive param if runnning from GUI for a different behavior
 (defn handle-program-error [msg]
   (println "Error in program:")
   (println msg)

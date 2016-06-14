@@ -14,8 +14,12 @@
 
   (testing "Handles GOOD 200 api response"
     (is (=
-         (handle-api-response (:status mocked-meta) (:headers mocked-meta) mocked-body)
-         145612
+         {:Id 145612,
+           :Name "Rombauer Chardonnay 2014",
+           :Url "http://www.wine.com/v6/Rombauer-Chardonnay-2014/wine/145612/Detail.aspx",
+           :PriceRetail 36.0,
+           :Description ""}
+         (first (handle-api-response (:status mocked-meta) (:headers mocked-meta) mocked-body))
          )))
 
   (testing "Handles non-ok api status codes"
