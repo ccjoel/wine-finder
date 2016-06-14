@@ -13,7 +13,8 @@
     (is (= (parse-json "{\"hello\": \"world\"}" "ERROR MSG") {:hello "world"})))
 
   (testing "Handles parsing BAD json appropriatedly"
-    (with-redefs [exit-now! #(str "A MSG")]
+    (with-redefs [exit-now! #(str "A MSG")
+                  println #(str %)]
       (is (=
            (parse-json "{a: \"world\"}" "A MSG")
            "A MSG")))))
