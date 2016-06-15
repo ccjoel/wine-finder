@@ -2,17 +2,11 @@
   (:require [clojure.test :refer :all]
             [wines.util :refer :all]))
 
-
-
 (deftest with-abs-path-test
-
   (testing "Returns correct abs path"
     (is (.contains (with-abs-path "FILE") "wines/FILE"))))
 
-
-
 (deftest parse-json-test
-
   (testing "Parses GOOD json appropriatedly"
     (is (= (parse-json "{\"hello\": \"world\"}" "ERROR MSG") {:hello "world"})))
 
@@ -23,11 +17,11 @@
            (parse-json "{a: \"world\"}" "A MSG")
            "A MSG")))))
 
-
 (deftest format-query-params-test
-
   (testing "formats query params appropiatedly"
-    (is (= (format-query-params {:search "query", :hi 5}) "&search=query&hi=5")))
+    (is (= (format-query-params {:search "query", :hi 5}) "&search=query&hi=5"))
+    (is (= (format-query-params {:search "query", :hi "Hello World"}) "&search=query&hi=Hello+World"))
+    (is (= (format-query-params {:search "query", :hi "Random $ money ?"}) "&search=query&hi=Random+%24+money+%3F")))
 
   (testing "handles nil for format query params"
     (is (= (format-query-params {}) ""))))

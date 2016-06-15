@@ -1,7 +1,8 @@
 (ns wines.util
   (:require
    [clojure.string :as s]
-   [clojure.data.json :as json]))
+   [clojure.data.json :as json])
+  (:import [java.net URLEncoder]))
 
 (defn with-abs-path [filename]
   (str (.getCanonicalPath (clojure.java.io/file ".")) (java.io.File/separator) filename))
@@ -24,4 +25,4 @@
 (defn format-query-params [query-params]
   (s/join
    (for [param query-params]
-     (str "&" (s/join "=" [(name (key param)) (val param)])))))
+     (str "&" (s/join "=" [(name (key param)) (URLEncoder/encode (str (val param)) "UTF-8")])))))
