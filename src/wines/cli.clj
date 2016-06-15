@@ -2,11 +2,9 @@
   (:require
    [wines.gui :refer [call-ui]]
    [wines.util :refer [handle-program-error]]
-   [wines.http :refer [api-call]]
-   ))
+   [wines.http :refer [api-call]]))
 
 ;; ---------- TODO: remove this section
-
 ; hardcoding resource to catalog for now
 (def api-resource "catalog")
 
@@ -28,8 +26,8 @@
     (let [opts (:options cli-args)]
       (cond
        (empty? opts) (call-ui)
-       (not (nil? (:help opts)))
-         (do
-           (print-cli-headers true)
-           (println (:summary cli-args)))
+       ; todo, change "not nil" to just checking if val exists?
+       (not (nil? (:help opts))) (do
+                                   (print-cli-headers true)
+                                   (println (:summary cli-args)))
        (not (nil? (:search opts))) (api-call api-resource opts)))))

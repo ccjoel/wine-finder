@@ -5,10 +5,8 @@
             [wines.http :refer :all]
             [wines.util :refer [with-abs-path parse-json handle-program-error]]))
 
-
 (def mocked-body (slurp (with-abs-path "dev-resources/body.seed.json")))
 (def mocked-meta (edn/read-string (slurp (with-abs-path "dev-resources/http.seed.edn"))))
-
 
 (deftest handle-api-response-test
 
