@@ -9,7 +9,7 @@
   (let [product-list (:List products) total (:Total products)]
     (if (= total 0)
       (handle-program-error "No products found with your criteria.")
-      (if (not (nil? product-list))
+      (if-not (nil? product-list)
         (for [product product-list]
           (when (not (nil? product))
             (select-keys product [:Id :Name :Url :PriceRetail :Description])))
@@ -20,10 +20,9 @@
     (let [json-res (parse-json body "Api response was not valid json.")
           status (:Status json-res)]
       (if (= (:ReturnCode status) 0)
-        (let [products (:Products json-res)]
-          (if (not (nil? products))
+        (if-let [products (:Products json-res)]
             (handle-products-listing products)
-            (handle-program-error "Expected products on json payload, but got nil.")))
+            (handle-program-error "Expected products on json payload, but got nil."))
         (handle-program-error (str (:Messages status)))))))
 
 (defn api-call [api-resource query-params]
