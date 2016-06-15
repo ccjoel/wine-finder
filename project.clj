@@ -7,7 +7,8 @@
                  [org.clojure/tools.cli "0.3.5"]
                  [org.clojure/tools.logging "0.3.1"]
                  [org.clojure/data.json "0.2.6"]
-                 [http-kit "2.1.18"]]
+                 [http-kit "2.1.18"]
+                 [seesaw "1.4.5"]]
   :main ^:skip-aot wines.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
