@@ -8,13 +8,16 @@
 
 (def bg-color "#fdfdfd")
 
+(def max-height 550)
+(def app-height 600)
+
 (ss/native!)
 
 (def window (ss/frame :title "Wine Finder",
 ;;            :on-close :exit,    ; add this when done...?
 ;;                       :minimum-size [800 :by 400]
-;;                       :resizable? false
-                      :size [900 :by 500]
+                      :resizable? false
+                      :size [950 :by app-height]
               ))
 
 (defn display [content]
@@ -68,7 +71,7 @@
                          :border [2 "Results" 10]
                          :background :white
                          :foreground :black
-;;                          :size [2000 :by 1000]
+                         :size [300 :by max-height]
                          ))
 
 (def result-properties
@@ -76,29 +79,33 @@
     :id :result-properties
     :model ["Description: Hello World" "Location: left right"]
     :border [2 "Properties" 10]
-    :minimum-size [600 :by 100]
+    :size [400 :by max-height]
     )
   )
 
 (def container
-  (ss/border-panel
-    :west (ss/flow-panel
-            :size [200 :by 300]
-            :items [(ss/flow-panel
-                      :size [98 :by 110]
-                      :items [wine-com-img title-lbl]
-                      :background bg-color
-                      )
-                    (ss/grid-panel
-                      :rows 2
-                      :vgap 3
-                      :background bg-color
-                      :items [search-input search-button]
-                      )]
-            :background bg-color)
-    :center results
-    :east result-properties
-    ))
+  (ss/flow-panel
+;;     :hgap   horizontal gap between widgets
+    :vgap   20
+    :background bg-color
+    :align  :center
+    :items [(ss/flow-panel
+              :align :center
+              :vgap 10
+              :size [210 :by max-height]
+              :items [(ss/flow-panel
+                        :size [98 :by 110]
+                        :items [wine-com-img title-lbl]
+                        :background bg-color
+                        )
+                      (ss/grid-panel
+                        :rows 2
+                        :vgap 3
+                        :background bg-color
+                        :items [search-input search-button]
+                        )]
+              :background bg-color)
+            (ss/horizontal-panel :items [ results result-properties ])]))
 
 (show-window)
 
