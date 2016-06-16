@@ -1,20 +1,70 @@
 (ns wines.gui
   (:require [seesaw.dev :as dev]
             [seesaw.core :as ss]
-            [wines.util :refer [parse-json]]))
+            [wines.util :refer [parse-json]]
+            [clojure.pprint :refer [pprint]]))
 
 (defn call-ui []
   (println "Calling ui soon!")
   nil)
 
 (def bg-color "#fdfdfd")
-
 (def max-height 530)
 (def app-height 600)
+(def wine-results-size [370 :by max-height])
+(def wine-properties-size [400 :by (- max-height 30)])
+(def main-search-size [210 :by max-height])
 
 (ss/native!)
 
+
+;;;; TODO: development, mocking. remove!
+(def mocked-body
+  (take 35
+    (cycle
+      (:List
+        (:Products
+          (parse-json
+            (slurp (clojure.java.io/resource "body.seed.json")) "testing"))))))
+
+(def results-model
+  (for [product mocked-body]
+    (let [simpler-product (select-keys product [:Name :Id])]
+      (clojure.string/join
+        " "
+        [(format "%-8d" (:Id simpler-product))
+         (:Name simpler-product)]
+        ))))
+
+;;;;;
+
+
+;; todo: prompt user for api key?
+
+; TODO: why menubar wont show?
+(def main-menu
+  (ss/menubar
+    :items [(ss/menu
+              :text "File"
+              :items [(ss/action
+                        :name "Open..."
+                        :key "menu O"
+                        :handler (fn [e] (println "Open something")))])
+            (ss/menu
+              :text "Edit"
+              :items [(ss/action
+                        :name "Undo"
+                        :key "menu Z"
+                        :handler (fn [e] (println "Undo something")))])
+            (ss/menu
+              :text "Help"
+              :items [(ss/action
+                        :name "About"
+                        :key "menu H"
+                        :handler (fn [e] (println "Show about dialog")))])]))
+
 (def window (ss/frame :title "Wine Finder",
+                      :menubar main-menu
 ;;            :on-close :exit,    ; add this when done...?
 ;;                       :resizable? false  ; todo: resizable false
                       :size [950 :by app-height]
@@ -23,8 +73,6 @@
 (defn display [content]
   (ss/config! window :content content)   ; config! used to configuer frame, lbls etc
   content)
-
-(def tool-bar (ss/toolbar :items ["File" "About"]))
 
 (def title-lbl (ss/label "Catalog Search"))
 
@@ -38,7 +86,7 @@
    :icon "http://cache.wine.com/images/logos/80x80_winecom_logo.png"))
 
 (def search-input
-  (ss/text ; could replace with ss/input
+  (ss/text ; could replace with ss/input later
    :text "Cabernet Sauvignon"
    :editable? true
    :columns 14))
@@ -66,58 +114,56 @@
    :class :label-input))
 
 
-(def mocked-body
-  (reduce
-    into
-    (replicate
-      5
-      (:List
-        (:Products
-          (parse-json (slurp (clojure.java.io/resource "body.seed.json")) "w.e"))))))
-
-
-
-;; (prn (:Name (first mocked-body)))
-
-(def results-model (for [product mocked-body]
-  [(:Name (select-keys product [:Name]))]))
-
-
-
-(def results (ss/scrollable (ss/listbox :model results-model
+(def wine-results (ss/scrollable (ss/listbox :model results-model
                          :id :results
-                         :border [2 "Results" 10]
                          :background :white
                          :foreground :black
-                         :size [(- 300 20) :by (- max-height 30)]
+                         :border nil
                          ; todo: change color when selecting items form box,
 ;;                          using renderer/ :listen :selection
                          :listen [:selection
                                   (fn [event]
                                     (println "You selected " (ss/selection event)))]
+;;                           :renderer (fn [item ev] (:Name item) )
                          )
-                            :size [300 :by max-height]
-                            :border nil
+                            :size wine-results-size
+                            :border [2 "Results" 10]
                             ))
 
 
-(defn render-property [renderer {:keys [value]}]
+(defn render-property [item {:keys [value]}]
   ; todo clean this keys / value implementation
-  (ss/config! renderer :background :white :foreground :black :border nil))
+  (ss/config! item :background :white :foreground :black :border nil))
 
-(def result-properties
-  (ss/scrollable (ss/listbox
-                   :id :result-properties
-                   :model ["Description: Hello World" "Location: left right"]
-                   :border [1 14]
-                   :size [(- 400 20) :by (- max-height 30)]
-                   :background :white
-                   :renderer render-property)
+(def wine-properties-list
+  (ss/scrollable
+    (ss/listbox
+      :id :wine-properties
+      :model ["Description: Hello World" "Location: left right"]
+      :border [1 14]
+;;       :size [(- 400 20) :by (- max-height 30)]
+      :background :white
+      :renderer render-property)
+    :size wine-properties-size
+    :border nil))
 
-                 :size [400 :by max-height]
-                 :border nil
-                 )
-  )
+(def wine-properties-table
+  (ss/scrollable
+    (ss/table
+      :model [
+               :columns ["prop-name" "value"]
+               :rows [
+                       ["desc" "it is"]
+                       ["location" "PR"]
+                       ]
+               ]
+;;       :border [1 14]
+;;       :size [(- 400 20) :by (- max-height 30)]
+      :background :white
+;;       :renderer render-property
+      )
+    :size wine-properties-size
+    :border nil))
 
 
 (def container
@@ -126,7 +172,7 @@
     :background bg-color
     :align  :center
     :items [(ss/flow-panel
-                :align :center :vgap 10 :size [210 :by max-height]
+                :align :center :vgap 10 :size main-search-size
                 :items [(ss/flow-panel
                           :size [98 :by 110]
                           :items [wine-com-img title-lbl]
@@ -136,13 +182,15 @@
                           :background bg-color
                           :items [search-input search-button] )]
                 :background bg-color)
-            (ss/horizontal-panel :items [ results result-properties ])]))
+            (ss/horizontal-panel :items [ wine-results wine-properties-table ])]))
 
 (show-window)
-;;
+
 (display container)
 
+;; (merge-with + wine-properties-size wine-results-size) ; only if inputs are maps
 
+;; (ss/config! wine-properties :visible? true)
 
 ;; (ss/listen window
 ;;   :component-resized (fn [event] (println event)))
