@@ -47,23 +47,15 @@
     (ss/table
       :id :wine-properties
       :show-grid? true
-      ;;       :show-horizontal-lines? true
-      ;;       :show-vertical-lines? true
-      ;;       :fills-viewport-height? true
+      :show-horizontal-lines? true
+      :show-vertical-lines? true
+      :fills-viewport-height? true
       ;;       :auto-resize :all-columns
-      :model [
-               :columns ["Name" "Value"]
-               :rows [
-                       ["desc" "it is"]
-                       ["location" "PR"]
-                       ]
-               ]
-      )
+      :model [:columns ["Property" "Value"] :rows []])
+    :id :wine-properties-scroller
     :background bg-color
     :size wine-properties-size
-    :border [1 "Wine Properties" 10]
-    )
-  )
+    :border [1 "Wine Properties" 10]))
 
 (def wine-results
   (ss/scrollable
@@ -78,20 +70,10 @@
       :listen [:selection
                (fn [event]
                  (let [selected (ss/selection event)
-                       selected-model (find-wine-object selected mocked-body)
-                       ]
-                   (println "You selected " selected)
-
-                   (prn (ss/select (ss/to-root event) [:#wine-properties]) )
-
+                       selected-model (find-wine-object selected mocked-body)]
                    (ss/config! (ss/select (ss/to-root event) [:#wine-properties])
-                               :model [
-                                        :columns ["Name" "Value"]
-                                        :rows (get-rows selected-model)
-                                        ]
-                               )
-                   ))]
-      )
+                               :model [:columns ["Name" "Value"]
+                                       :rows (get-rows selected-model)])))])
     :size wine-results-size
     :border [2 "Results" 10]
     ))
@@ -119,6 +101,5 @@
               :background  bg-color)
             ]))
 
-(show-window)
-
-(display window container)
+;; (show-window)
+;; (display window container)

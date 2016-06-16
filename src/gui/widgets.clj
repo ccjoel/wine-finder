@@ -28,4 +28,7 @@
 
 (def wine-com-img
   (ss/label
-   :icon "http://cache.wine.com/images/logos/80x80_winecom_logo.png"))
+   :icon
+    (clojure.java.io/resource "images/winecom_logo.png")
+;;     "http://cache.wine.com/images/logos/80x80_winecom_logo.png"
+    ))
