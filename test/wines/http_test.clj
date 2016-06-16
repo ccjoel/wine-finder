@@ -5,6 +5,7 @@
             [wines.http :refer :all]
             [wines.util :refer [with-abs-path parse-json handle-program-error]]))
 
+; todo: change to use resource instead of abs path.. check which is better
 (def mocked-body (slurp (with-abs-path "dev-resources/body.seed.json")))
 (def mocked-meta (edn/read-string (slurp (with-abs-path "dev-resources/http.seed.edn"))))
 
