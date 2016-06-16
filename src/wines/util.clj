@@ -16,11 +16,14 @@
   (println msg)
   (exit-now!))
 
-(defn parse-json [json-string error-msg]
-  (try
-    (json/read-str json-string :key-fn keyword)
-    (catch java.lang.Exception e
-      (handle-program-error error-msg))))
+(defn parse-json
+  ([json-string]
+   (parse-json json-string "No error message provided."))
+  ([json-string error-msg]
+   (try
+     (json/read-str json-string :key-fn keyword)
+     (catch java.lang.Exception e
+       (handle-program-error error-msg)))))
 
 (defn format-query-params [query-params]
   (s/join

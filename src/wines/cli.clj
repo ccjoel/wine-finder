@@ -1,6 +1,6 @@
 (ns wines.cli
   (:require
-   [wines.gui :refer [call-ui]]
+   [gui.core :refer [call-ui]]
    [wines.util :refer [handle-program-error]]
    [wines.http :refer [api-call]]))
 
