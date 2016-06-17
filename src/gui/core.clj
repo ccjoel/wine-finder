@@ -3,6 +3,7 @@
     [clojure.pprint :refer [pprint]]
     [seesaw.dev :as dev]
     [seesaw.core :as ss]
+    [wines.http :refer [api-call]]
     [gui.constants :refer :all]
     [gui.util :refer :all]
     [gui.widgets :refer :all]))
@@ -17,8 +18,8 @@
 
 (def window (ss/frame :title "Wine Finder",
                       :menubar main-menu
-                      ;;            :on-close :exit,    ; add this when done...?
-                      ;;                       :resizable? false  ; todo: resizable false
+                      ;;            :on-close :exit,    ; add this on prod env
+                      ;;                       :resizable? false  ; todo: prod env
                       :size [950 :by app-height]
                       ))
 
@@ -29,20 +30,30 @@
     :editable? true
     :columns 14))
 
+; todo: this is not working currently. checkpoint...
+(defn search-button-handler [query]
+  ; todo: api-call blocks... so show a loading.. or something..
+  ; todo: deref api promise then act
+  (let [ finished (api-call
+    "catalog" {:search query}
+    (fn [status headers body]
+      (when (= status 200)
+        (ss/alert "success!")
+        (pprint body)))
+    #(ss/alert (str "Error " %))) ]
+  ))
+
 (def search-button
   (ss/button
     :text "Find my wine!"
-    :listen [:action (fn [event](ss/alert (ss/text search-input)))
+    :listen [:action (fn [event](search-button-handler (ss/text search-input)))
              :mouse-entered #(ss/config! % :foreground :red)
              :mouse-exited #(ss/config! % :foreground :black)]))
 
 (defn show-window []
-  ;;   (invoke-later
-  (-> window ss/show!)
-  ;;       (.setLocationRelativeTo nil) ; add when done development
-  ;;   (-> window .toFront)
-  )
-;;)
+  (ss/invoke-later
+    (-> window ss/show! (.setLocationRelativeTo nil)) ; add when done development
+    (-> window .toFront)))
 
 (def wine-properties-table
   (ss/scrollable
@@ -81,7 +92,6 @@
     ))
 
 
-
 (def container
   (ss/flow-panel
     :vgap   20
@@ -106,4 +116,6 @@
 (defn call-ui []
   (display window container)
   (show-window)
-  nil)
+  true)
+
+;; (call-ui)
