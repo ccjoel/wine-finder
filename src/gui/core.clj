@@ -13,10 +13,6 @@
   (ss/config! frame :content content)   ; config! used to configuer frame, lbls etc
   content)
 
-(defn call-ui []
-  (println "Calling ui soon!")
-  nil)
-
 ;; todo: prompt user for api key?
 
 (def window (ss/frame :title "Wine Finder",
@@ -107,5 +103,7 @@
               :background  bg-color)
             ]))
 
-;; (show-window)
-;; (display window container)
+(defn call-ui []
+  (display window container)
+  (show-window)
+  nil)

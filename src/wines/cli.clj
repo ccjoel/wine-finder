@@ -1,8 +1,9 @@
 (ns wines.cli
   (:require
-   [gui.core :refer [call-ui]]
-   [wines.util :refer [handle-program-error]]
-   [wines.http :refer [api-call]]))
+    [clojure.pprint :refer [pprint]]
+    [gui.core :refer [call-ui]]
+    [wines.util :refer [handle-program-error]]
+    [wines.http :refer [api-call]]))
 
 ;; ---------- TODO: remove this section
 ; hardcoding resource to catalog for now
@@ -30,4 +31,4 @@
        (not (nil? (:help opts))) (do
                                    (print-cli-headers true)
                                    (println (:summary cli-args)))
-       (not (nil? (:search opts))) (api-call api-resource opts)))))
+       (not (nil? (:search opts))) (pprint (doall (api-call api-resource opts)))))))

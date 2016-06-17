@@ -37,5 +37,5 @@
           (println "Async HTTP GET status: " status)
           (println "Headers: ")
           (pprint headers)
-          (println "Response body:")
-          (pprint (doall (handle-api-response status headers body))))))))
+          (println "Response body...")
+          (handle-api-response status headers body))))))
