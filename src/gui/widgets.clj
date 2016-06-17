@@ -1,7 +1,7 @@
 (ns gui.widgets
-  (:require [seesaw.core :as ss]))
+  (:require [seesaw.core :as ss]
+            [gui.constants :refer :all]))
 
-; TODO: why menubar wont show?
 (def main-menu
   (ss/menubar
     :items [(ss/menu
@@ -32,3 +32,10 @@
     (clojure.java.io/resource "images/winecom_logo.png")
 ;;     "http://cache.wine.com/images/logos/80x80_winecom_logo.png"
     ))
+
+(defn label-with-input [label input]
+  (ss/horizontal-panel
+   :items [label input]
+   :background bg-color
+   :border nil
+   :class :label-input))

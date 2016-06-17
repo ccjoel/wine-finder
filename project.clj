@@ -11,4 +11,5 @@
                  [seesaw "1.4.5"]]
   :main ^:skip-aot wines.core
   :target-path "target/%s"
+  :jvm-opts ["-Xdock:name=Wine Finder"]
   :profiles {:uberjar {:aot :all}})

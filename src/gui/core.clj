@@ -7,6 +7,12 @@
     [gui.util :refer :all]
     [gui.widgets :refer :all]))
 
+(ss/native!)
+
+(defn display [frame content]
+  (ss/config! frame :content content)   ; config! used to configuer frame, lbls etc
+  content)
+
 (defn call-ui []
   (println "Calling ui soon!")
   nil)
