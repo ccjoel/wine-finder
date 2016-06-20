@@ -16,13 +16,13 @@
 
 ;; todo: prompt user for api key?
 
+(def api-wine-results (atom {}))   ; shared state among ui components.
+
 (def window (ss/frame :title "Wine Finder",
                       :menubar main-menu
                       ;;            :on-close :exit,    ; add this on prod env
-                      ;;                       :resizable? false  ; todo: prod env
-                      :size [950 :by app-height]
-                      ))
-
+                      ;;                       :resizable? false  ; todo: use prod/dev env flag
+                      :size [950 :by app-height]))
 
 (def search-input
   (ss/text ; could replace with ss/input later
@@ -33,15 +33,16 @@
 ; todo: this is not working currently. checkpoint...
 (defn search-button-handler [query]
   ; todo: api-call blocks... so show a loading.. or something..
-  ; todo: deref api promise then act
-  (let [ finished (api-call
-    "catalog" {:search query}
-    (fn [status headers body]
-      (when (= status 200)
-        (ss/alert "success!")
-        (pprint body)))
-    #(ss/alert (str "Error " %))) ]
-  ))
+  ; todo... remove this let. not using finished for anything.
+  (let [finished (api-call
+                   "catalog" {:search query}
+                   (fn [status headers body]
+                     (when (= status 200)
+                       (let [parsed-body (parse-products body)]
+                         ; todo: remove this let- its unnecessary
+                         (reset! api-wine-results (parse-products-all body))
+                         (ss/config! (ss/select window [:#results]) :model parsed-body))))
+                   #(ss/alert (str "Error " %)))]))
 
 (def search-button
   (ss/button
@@ -63,7 +64,6 @@
       :show-horizontal-lines? true
       :show-vertical-lines? true
       :fills-viewport-height? true
-      ;;       :auto-resize :all-columns
       :model [:columns ["Property" "Value"] :rows []])
     :id :wine-properties-scroller
     :background bg-color
@@ -73,7 +73,7 @@
 (def wine-results
   (ss/scrollable
     (ss/listbox
-      :model results-model
+      :model []
       :id :results
       :background :white
       :foreground :black
@@ -83,7 +83,7 @@
       :listen [:selection
                (fn [event]
                  (let [selected (ss/selection event)
-                       selected-model (find-wine-object selected mocked-body)]
+                       selected-model (find-wine-object selected @api-wine-results)]
                    (ss/config! (ss/select (ss/to-root event) [:#wine-properties])
                                :model [:columns ["Name" "Value"]
                                        :rows (get-rows selected-model)])))])
@@ -117,5 +117,3 @@
   (display window container)
   (show-window)
   true)
-
-;; (call-ui)

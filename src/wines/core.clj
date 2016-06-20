@@ -10,5 +10,4 @@
 (defn -main
   "Decide what to do... make api call or show ui."
   [& args]
-  (let [cli-args (parse-opts args cli-options)]
-    (parse-cli-args cli-args)))
+    (parse-cli-args (parse-opts args cli-options)))

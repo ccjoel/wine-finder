@@ -29,6 +29,23 @@
 ;;       ))
   )
 
+(defn parse-products-all [api-response]
+  (:List
+    (:Products
+      (parse-json api-response))))
+
+(defn parse-products [api-response]
+  (let [ parsed-res (:List
+                      (:Products
+                        (parse-json api-response)))]
+    (for [product parsed-res]
+      (let [simpler-product (select-keys product [:Name :Id])]
+        (clojure.string/join
+          " "
+          [(format "%-8d" (:Id simpler-product))  ; todo: format this correclty...
+           (:Name simpler-product)]
+          )))))
+
 (def results-model
   (for [product mocked-body]
     (let [simpler-product (select-keys product [:Name :Id])]

@@ -15,6 +15,7 @@
 (def conf
   (parse-json
    (try
+     ; todo: use clojure.lang.resource instead of with-abs-path
      (slurp (with-abs-path "resources/conf.json"))
      (catch java.io.FileNotFoundException e
        (handle-program-error "File does not exist.")))
