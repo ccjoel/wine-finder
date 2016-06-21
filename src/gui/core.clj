@@ -85,8 +85,7 @@
                                :model [:columns ["Name" "Value"]
                                        :rows (get-rows selected-model)])))])
     :size wine-results-size
-    :border [2 "Results" 10]
-    ))
+    :border [2 "Results" 10]))
 
 
 (def container
