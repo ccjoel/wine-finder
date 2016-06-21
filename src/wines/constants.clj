@@ -1,7 +1,6 @@
 (ns wines.constants
   (:require
-   [wines.util :refer [handle-program-error parse-json]]
-  ))
+    [wines.util :refer [handle-program-error parse-json]]))
 
 (def api-path "services.wine.com/api/beta2/service.svc/json/")
 
@@ -14,8 +13,8 @@
 ; read json config file
 (def conf
   (parse-json
-   (try
-     (slurp (clojure.java.io/resource "conf.json"))
-     (catch java.io.FileNotFoundException e
-       (handle-program-error "File does not exist.")))
-   "Invalid json in conf.json"))
+    (try
+      (slurp (clojure.java.io/resource "conf.json"))
+      (catch java.io.FileNotFoundException e
+        (handle-program-error "File does not exist.")))
+    "Invalid json in conf.json"))
