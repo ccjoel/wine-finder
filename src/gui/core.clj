@@ -34,16 +34,16 @@
 (defn search-button-handler [query]
   ; todo: api-call blocks... so show a loading.. or something..
   ; todo... remove this let. not using finished for anything.
-  (let [finished (api-call
-                   "catalog" {:search query}
-                   (fn [status headers body]
-                     (when (= status 200) ;todo: sometimes we get a 200 but no results.. handle this case ;)
-                       ; todo: have seen errors when parsing nil body? check and catch exception
-                       (let [parsed-body (parse-products body)]
-                         ; todo: remove this let- its unnecessary
-                         (reset! api-wine-results (parse-products-all body))
-                         (ss/config! (ss/select window [:#results]) :model parsed-body))))
-                   #(ss/alert (str "Error " %)))]))
+  (api-call
+    "catalog" {:search query}
+    (fn [status headers body]
+      (when (= status 200) ;todo: sometimes we get a 200 but no results.. handle this case ;)
+        ; todo: have seen errors when parsing nil body? check and catch exception
+        (let [parsed-body (parse-products body)]
+          ; todo: remove this let- its unnecessary
+          (reset! api-wine-results (parse-products-all body))
+          (ss/config! (ss/select window [:#results]) :model parsed-body))))
+    #(ss/alert (str "Error " %))))
 
 (def search-button
   (ss/button
@@ -54,7 +54,7 @@
 
 (defn show-window []
   (ss/invoke-later
-    (-> window ss/show! (.setLocationRelativeTo nil)) ; add when done development
+    (-> window ss/show! (.setLocationRelativeTo nil))
     (-> window .toFront)))
 
 (def wine-properties-table

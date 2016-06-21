@@ -2,8 +2,10 @@
 
 Running fast:
 
-grench main wines.core -s merlot
+project-dir> lein trampoline repl :headless
+project-dir> grench main wines.core -s merlot
 
+-------------
 (pst)
 (instance?)
 (type {:x 1})
@@ -59,17 +61,18 @@ reverse -> non lazy returning reversed seq items from collection
 
 ## Installation
 
-Download from http://example.com/FIXME.
+TODO
 
 ## Usage
 
 FIXME: explanation
 
-    $ java -jar wines-0.1.0-standalone.jar [args]
+$ java -jar wines-0.1.0-standalone.jar
 
 ## Options
 
-FIXME: listing of options this app accepts.
+-h
+-s
 
 ## Examples
 

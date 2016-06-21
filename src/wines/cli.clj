@@ -48,10 +48,9 @@
       (cond
         (empty? opts) (call-ui)
         ; todo, change "not nil" to just checking if val exists?
-        (not (nil?
-               (:help opts))) (do
-                                (print-cli-headers true)
-                                (println (:summary cli-args)))
+        (not (nil? (:help opts))) (do
+                                    (print-cli-headers true)
+                                    (println (:summary cli-args)))
         (not
           (nil?
             (:search opts))) (pprint
