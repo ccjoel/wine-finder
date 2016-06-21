@@ -1,9 +1,11 @@
 # wines
 
+practicing clojure with seesaw / http-kit
+
 Running fast:
 
 project-dir> lein trampoline repl :headless
-project-dir> grench main wines.core -s merlot
+project-dir> grench main wines.core
 
 -------------
 (pst)
