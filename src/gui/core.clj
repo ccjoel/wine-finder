@@ -11,7 +11,7 @@
 (ss/native!)
 
 (defn display [frame content]
-  (ss/config! frame :content content)   ; config! used to configuer frame, lbls etc
+  (ss/config! frame :content content)
   content)
 
 ;; todo: prompt user for api key?
@@ -20,9 +20,9 @@
 
 (def window (ss/frame :title "Wine Finder",
                       :menubar main-menu
-                      ;;            :on-close :exit,    ; add this on prod env
-                      ;;                       :resizable? false  ; todo: use prod/dev env flag
-                      :size [950 :by app-height]))
+                      :on-close (if (System/getenv "wine_dev") :dispose :exit),
+                      :resizable? (not (not (System/getenv "wine_dev")))
+                      :size window-size))
 
 (def search-input
   (ss/text ; could replace with ss/input later
@@ -37,7 +37,8 @@
   (let [finished (api-call
                    "catalog" {:search query}
                    (fn [status headers body]
-                     (when (= status 200)
+                     (when (= status 200) ;todo: sometimes we get a 200 but no results.. handle this case ;)
+                       ; todo: have seen errors when parsing nil body? check and catch exception
                        (let [parsed-body (parse-products body)]
                          ; todo: remove this let- its unnecessary
                          (reset! api-wine-results (parse-products-all body))

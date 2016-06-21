@@ -1,19 +1,24 @@
 # wines
 
-FIXME: description
+Running fast:
+
+grench main wines.core -s merlot
 
 (pst)
 (instance?)
-(doc pst)
 (type {:x 1})
 (.printStackTrace *e)
 
 (keys (ns-publics 'namespace))
 
-cons vs into vs conj
+*ns* ; current namespace
 
-take, repeat, drop.. take-while, drop-while
-every, some
+*print-length*
+;dynamic var
+;*print-length* controls how many items of each collection the
+;printer will print.
+
+(print (apply str (interleave (all-ns) (repeat "\n")))) ; println all available namespaces
 
 ((comp inc *) 2 3)
 ; => 7
@@ -23,6 +28,14 @@ recur instead of calling the function by name... optimized
 memoize
 
 time
+
+(def ^:dynamic x 1)
+user=> (def ^:dynamic y 1)
+user=> (+ x y)
+2
+
+user=> (binding [x 2 y 3]
+         (+ x y))
 
 (Thread/sleep 1000)
 
@@ -35,8 +48,6 @@ name / keyword
 first, rest, last, nth
 
 count: returns number of items in collection
-
-map reduce filter
 
 reverse -> non lazy returning reversed seq items from collection
 
@@ -67,10 +78,6 @@ FIXME: listing of options this app accepts.
 ### Bugs
 
 ...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
 
 ## License
 

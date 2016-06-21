@@ -3,7 +3,7 @@
             [clojure.edn :as edn]
             [clojure.string :as s]
             [wines.cli :refer :all]
-            [wines.util :refer [with-abs-path parse-json handle-program-error]]))
+            [wines.util :refer [parse-json handle-program-error]]))
 
 (def mocked-cli-args {:options {},
                       :arguments [],
@@ -23,8 +23,8 @@
 
 
 ; todo: change to use resource instead of abs path.. check which is better
-(def mocked-body (slurp (with-abs-path "dev-resources/body.seed.json")))
-(def mocked-meta (edn/read-string (slurp (with-abs-path "dev-resources/http.seed.edn"))))
+(def mocked-body (slurp (clojure.java.io/resource "body.seed.json")))
+(def mocked-meta (edn/read-string (slurp (clojure.java.io/resource "http.seed.edn"))))
 
 
 (deftest handle-api-body-test

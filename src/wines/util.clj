@@ -4,8 +4,10 @@
    [clojure.data.json :as json])
   (:import [java.net URLEncoder]))
 
-(defn with-abs-path [filename]
-  (str (.getCanonicalPath (clojure.java.io/file ".")) (java.io.File/separator) filename))
+;; (defn with-abs-path [filename]
+  ; TODO: maybe change "." with *file*
+;;   (str (.getCanonicalPath (clojure.java.io/file ".")) (java.io.File/separator) filename)
+;;   (clojure.java.io/resource filename))
 
 (defn exit-now! []
    (System/exit 0))

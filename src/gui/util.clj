@@ -29,6 +29,8 @@
 ;;       ))
   )
 
+; todo: use comp to use both parse-product and parse-products-all in core, without having to wrote
+;; 2 functions, or having to call one inside the other.. basically this removes duplicate code.
 (defn parse-products-all [api-response]
   (:List
     (:Products
