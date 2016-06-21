@@ -1,7 +1,15 @@
 (ns gui.util-test
   (:require
     [clojure.test :refer :all]
+    [wines.util :refer [parse-json]]
     [gui.util :refer :all]))
+
+
+(def mocked-body
+      (:List
+        (:Products
+          (parse-json
+            (slurp (clojure.java.io/resource "body.seed.json"))))))
 
 (deftest find-wine-object-test
   (testing "correctly finds object from wine list"

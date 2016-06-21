@@ -30,19 +30,15 @@
     :editable? true
     :columns 14))
 
-; todo: this is not working currently. checkpoint...
 (defn search-button-handler [query]
-  ; todo: api-call blocks... so show a loading.. or something..
-  ; todo... remove this let. not using finished for anything.
+  ; todo: api-call blocks- show a loading.
   (api-call
     "catalog" {:search query}
     (fn [status headers body]
-      (when (= status 200) ;todo: sometimes we get a 200 but no results.. handle this case ;)
+      (when (= status 200) ;todo: sometimes we get a 200 but no results.. handle this case
         ; todo: have seen errors when parsing nil body? check and catch exception
-        (let [parsed-body (parse-products body)]
-          ; todo: remove this let- its unnecessary
           (reset! api-wine-results (parse-products-all body))
-          (ss/config! (ss/select window [:#results]) :model parsed-body))))
+          (ss/config! (ss/select window [:#results]) :model (parse-products body))))
     #(ss/alert (str "Error " %))))
 
 (def search-button
@@ -79,7 +75,7 @@
       :background :white
       :foreground :black
       :border nil
-      ; todo: change color when selecting items form box,
+      ; todo: change color when selecting items from box,
       ;;                          using renderer/ :listen :selection
       :listen [:selection
                (fn [event]
