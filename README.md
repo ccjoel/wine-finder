@@ -8,6 +8,8 @@ project-dir> lein trampoline repl :headless
 project-dir> grench main wines.core
 
 -------------
+(clojure.pprint/cl-format nil "~r" 24343)
+
 (pst)
 (instance?)
 (type {:x 1})

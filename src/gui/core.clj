@@ -1,7 +1,7 @@
 (ns gui.core
   (:require
     [clojure.pprint :refer [pprint]]
-    [seesaw.dev :as dev]
+;;     [seesaw.dev :as dev]
     [seesaw.core :as ss]
     [wines.http :refer [api-call]]
     [gui.constants :refer :all]
