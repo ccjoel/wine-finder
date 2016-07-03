@@ -9,7 +9,8 @@
                  [org.clojure/data.json "0.2.6"]
                  [http-kit "2.1.18"]
                  [seesaw "1.4.5"]]
+  :omit-source true
   :main ^:skip-aot wines.core
   :target-path "target/%s"
-  :jvm-opts ["-Xdock:name=Wine Finder"]
+;  :jvm-opts ["-Xdock:name=Wine Finder"]
   :profiles {:uberjar {:aot :all}})

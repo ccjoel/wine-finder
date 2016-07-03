@@ -21,7 +21,7 @@
 (def window (ss/frame :title "Wine Finder",
                       :menubar main-menu
                       :on-close (if (System/getenv "wine_dev") :dispose :exit),
-                      :resizable? (not (not (System/getenv "wine_dev")))
+                      :resizable? true ;(not (not (System/getenv "wine_dev")))
                       :size window-size))
 
 (def search-input
